@@ -35,7 +35,7 @@
 #include <fcitx/ui.h>
 #include <libintl.h>
 
-#include <chewing.h>
+#include <taigi.h>
 
 #include "config.h"
 #include "eim.h"

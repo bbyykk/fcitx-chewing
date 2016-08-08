@@ -1,4 +1,4 @@
-[Chewing/SelectionKey]
+[Taigi/SelectionKey]
 Type=Enum
 Description=Selection Key
 DefaultValue=1234567890
@@ -10,27 +10,27 @@ Enum3=asdfjkl789
 Enum4=aoeuhtn789
 Enum5=1234qweras
 
-[Chewing/AddPhraseForward]
+[Taigi/AddPhraseForward]
 Type=Boolean
 Description=Add Phrase Forward
 DefaultValue=False
 
-[Chewing/ChoiceBackward]
+[Taigi/ChoiceBackward]
 Type=Boolean
 Description=Backward phrase choice
 DefaultValue=True
 
-[Chewing/AutoShiftCursor]
+[Taigi/AutoShiftCursor]
 Type=Boolean
 Description=Automatically shift cursor
 DefaultValue=True
 
-[Chewing/SpaceAsSelection]
+[Taigi/SpaceAsSelection]
 Type=Boolean
 Description=Space as selection key
 DefaultValue=True
 
-[Chewing/Layout]
+[Taigi/Layout]
 Type=Enum
 Description=Keyboard Layout
 DefaultValue=Default Keyboard
@@ -47,4 +47,4 @@ Enum8=DACHEN_CP26 Keyboard
 Enum9=Han-Yu PinYin Keyboard
 
 [DescriptionFile]
-LocaleDomain=fcitx-chewing
+LocaleDomain=fcitx-taigi

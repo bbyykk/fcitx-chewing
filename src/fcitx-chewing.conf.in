@@ -1,9 +1,9 @@
 [Addon]
-Name=fcitx-chewing
-_GeneralName=Chewing
-_Comment=Chewing Wrapper For Fcitx
+Name=fcitx-taigi
+_GeneralName=Taigi
+_Comment=Taigi Wrapper For Fcitx
 Category=InputMethod
 Enabled=True
-Library=fcitx-chewing.so
+Library=fcitx-taigi.so
 Type=SharedLibrary
 IMRegisterMethod=ConfigFile
