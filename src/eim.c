@@ -85,6 +85,18 @@ const char *builtin_keymaps[] = {
     "KB_HANYU_PINYIN"
 };
 
+void logger(void *data, int level, const char *fmt, ...)
+{
+	va_list ap;
+	FILE *fd = (FILE *) data;
+
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	//fprintf(fd, fmt, ap);
+	va_end(ap);
+}
+
+
 /**
  * @brief initialize the extra input method
  *
@@ -120,7 +132,10 @@ void* FcitxChewingCreate(FcitxInstance* instance)
     } else {
         FcitxLog(DEBUG, "chewing init ok");
     }
-
+    {
+	    void *p = NULL;
+	    chewing_set_logger(ctx, logger, p); 
+    }
     chewing->owner = instance;
     chewing_set_maxChiSymbolLen(ctx, CHEWING_MAX_LEN);
     // chewing will crash without set page
@@ -168,6 +183,7 @@ INPUT_RETURN_VALUE FcitxChewingDoInput(void* arg, FcitxKeySym sym, unsigned int 
     FcitxChewing* chewing = (FcitxChewing*) arg;
     ChewingContext* ctx = chewing->context;
 
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (FcitxHotkeyIsHotKey(sym, state, FCITX_SPACE)) {
         chewing_handle_Space(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_TAB)) {
@@ -240,6 +256,7 @@ INPUT_RETURN_VALUE FcitxChewingDoInput(void* arg, FcitxKeySym sym, unsigned int 
 boolean FcitxChewingInit(void* arg)
 {
     FcitxChewing* chewing = (FcitxChewing*) arg;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     FcitxInstanceSetContext(chewing->owner, CONTEXT_IM_KEYBOARD_LAYOUT, "us");
     FcitxInstanceSetContext(chewing->owner, CONTEXT_ALTERNATIVE_PREVPAGE_KEY, FCITX_LEFT);
     FcitxInstanceSetContext(chewing->owner, CONTEXT_ALTERNATIVE_NEXTPAGE_KEY, FCITX_RIGHT);
@@ -251,6 +268,7 @@ void FcitxChewingReset(void* arg)
     FcitxChewing* chewing = (FcitxChewing*) arg;
     chewing_Reset(chewing->context);
 
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     chewing_set_KBType( chewing->context, chewing_KBStr2Num(
                 (char *) builtin_keymaps[chewing->config.layout]));
 
@@ -272,6 +290,7 @@ static boolean FcitxChewingPaging(void* arg, boolean prev)
     FcitxInputState *input = FcitxInstanceGetInputState(chewing->owner);
     FcitxCandidateWordList* candList = FcitxInputStateGetCandidateList(input);
 
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (FcitxCandidateWordGetListSize(candList) == 0) {
         return false;
     }
@@ -317,6 +336,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
 
     int selkey[10];
     int i = 0;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     for (i = 0; i < 10; i++) {
         selkey[i] = builtin_selectkeys[chewing->config.selkey][i];
     }
@@ -408,6 +428,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWord(void* arg, FcitxCandidateWord* candWo
     FcitxInputState *input = FcitxInstanceGetInputState(chewing->owner);
     int page = w->index / config->iMaxCandWord + chewing_cand_CurrentPage(chewing->context);
     int off = w->index % config->iMaxCandWord;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (page < 0 || page >= chewing_cand_TotalPage(chewing->context))
         return IRV_TO_PROCESS;
     int lastPage = chewing_cand_CurrentPage(chewing->context);
@@ -448,6 +469,7 @@ static int FcitxChewingGetRawCursorPos(char * str, int upos)
 {
     unsigned int i;
     int pos = 0;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     for (i = 0; i < upos; i++) {
         pos += fcitx_utf8_char_len(fcitx_utf8_get_nth_char(str, i));
     }
@@ -462,6 +484,7 @@ static int FcitxChewingGetRawCursorPos(char * str, int upos)
 void FcitxChewingDestroy(void* arg)
 {
     FcitxChewing* chewing = (FcitxChewing*) arg;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     chewing_delete(chewing->context);
     free(arg);
 }
@@ -476,6 +499,7 @@ void FcitxChewingOnClose(void* arg, FcitxIMCloseEventType event)
 {
     FcitxChewing* chewing = (FcitxChewing*) arg;
     ChewingContext* ctx = chewing->context;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (event == CET_LostFocus || event == CET_ChangeByInactivate) {
         chewing_handle_Enter(ctx);
         if (event == CET_ChangeByInactivate) {
@@ -508,6 +532,7 @@ INPUT_RETURN_VALUE FcitxChewingKeyBlocker(void* arg, FcitxKeySym key, unsigned i
     FcitxChewing* chewing = (FcitxChewing*) arg;
     FcitxInputState *input = FcitxInstanceGetInputState(chewing->owner);
     FcitxCandidateWordList* candList = FcitxInputStateGetCandidateList(input);
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (FcitxCandidateWordGetListSize(candList) > 0
         && (FcitxHotkeyIsHotKeySimple(key, state)
         || FcitxHotkeyIsHotkeyCursorMove(key, state)
@@ -523,6 +548,7 @@ INPUT_RETURN_VALUE FcitxChewingKeyBlocker(void* arg, FcitxKeySym key, unsigned i
 boolean LoadChewingConfig(FcitxChewingConfig* fs)
 {
     FcitxConfigFileDesc *configDesc = GetFcitxChewingConfigDesc();
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (!configDesc)
         return false;
 
@@ -546,6 +572,7 @@ void SaveChewingConfig(FcitxChewingConfig* fc)
 {
     FcitxConfigFileDesc *configDesc = GetFcitxChewingConfigDesc();
     FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-chewing.config", "w", NULL);
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     FcitxConfigSaveConfigFileFp(fp, &fc->config, configDesc);
     if (fp)
         fclose(fp);
@@ -554,6 +581,7 @@ void SaveChewingConfig(FcitxChewingConfig* fc)
 void ConfigChewing(FcitxChewing* chewing)
 {
     ChewingContext* ctx = chewing->context;
+    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     chewing_set_addPhraseDirection( ctx, chewing->config.bAddPhraseForward ? 0 : 1 );
     chewing_set_phraseChoiceRearward( ctx, chewing->config.bChoiceBackward ? 1 : 0 );
     chewing_set_autoShiftCur( ctx, chewing->config.bAutoShiftCursor ? 1 : 0 );
