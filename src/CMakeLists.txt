@@ -11,8 +11,8 @@ set( fcitx_chewing_sources
 
 add_definitions( -DLOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/share/locale\" )
 
-fcitx_add_addon_full(chewing
+fcitx_add_addon_full(taigi
 DESC
 SOURCES ${fcitx_chewing_sources}
-IM_CONFIG chewing.conf
-LINK_LIBS ${CHEWING_LIBRARIES})
+IM_CONFIG taigi.conf
+LINK_LIBS ${TAIGI_LIBRARIES})

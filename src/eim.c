@@ -40,7 +40,7 @@
 #include "config.h"
 #include "eim.h"
 
-CONFIG_DESC_DEFINE(GetFcitxChewingConfigDesc, "fcitx-chewing.desc")
+CONFIG_DESC_DEFINE(GetFcitxChewingConfigDesc, "fcitx-taigi.desc")
 static int FcitxChewingGetRawCursorPos(char * str, int upos);
 static INPUT_RETURN_VALUE FcitxChewingGetCandWord(void* arg, FcitxCandidateWord* candWord);
 static void FcitxChewingReloadConfig(void* arg);
@@ -122,7 +122,7 @@ void* FcitxChewingCreate(FcitxInstance* instance)
     bindtextdomain("fcitx-chewing", LOCALEDIR);
     bind_textdomain_codeset("fcitx-chewing", "UTF-8");
 
-    chewing->context = chewing_new();
+    chewing->context = taigi_new();
     ChewingContext * ctx = chewing->context;
     
     if (NULL == chewing->context) {
@@ -134,12 +134,12 @@ void* FcitxChewingCreate(FcitxInstance* instance)
     }
     {
 	    void *p = NULL;
-	    chewing_set_logger(ctx, logger, p); 
+	    taigi_set_logger(ctx, logger, p); 
     }
     chewing->owner = instance;
-    chewing_set_maxChiSymbolLen(ctx, CHEWING_MAX_LEN);
+    taigi_set_maxChiSymbolLen(ctx, CHEWING_MAX_LEN);
     // chewing will crash without set page
-    chewing_set_candPerPage(ctx, config->iMaxCandWord);
+    taigi_set_candPerPage(ctx, config->iMaxCandWord);
     FcitxCandidateWordSetPageSize(FcitxInputStateGetCandidateList(input), config->iMaxCandWord);
     LoadChewingConfig(&chewing->config);
     ConfigChewing(chewing);
@@ -185,68 +185,68 @@ INPUT_RETURN_VALUE FcitxChewingDoInput(void* arg, FcitxKeySym sym, unsigned int 
 
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (FcitxHotkeyIsHotKey(sym, state, FCITX_SPACE)) {
-        chewing_handle_Space(ctx);
+        taigi_handle_Space(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_TAB)) {
-        chewing_handle_Tab(ctx);
+        taigi_handle_Tab(ctx);
     } else if (FcitxHotkeyIsHotKeySimple(sym, state)) {
         int scan_code = (int) sym & 0xff;
-        chewing_handle_Default(ctx, scan_code);
+        taigi_handle_Default(ctx, scan_code);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_BACKSPACE)) {
-        const char* zuin_str = chewing_bopomofo_String_static(ctx);
-        if (chewing_buffer_Len(ctx) == 0 && !zuin_str[0])
+        const char* zuin_str = taigi_bopomofo_String_static(ctx);
+        if (taigi_buffer_Len(ctx) == 0 && !zuin_str[0])
             return IRV_TO_PROCESS;
-        chewing_handle_Backspace(ctx);
-        if (chewing_buffer_Len(ctx) == 0 && !zuin_str[0])
+        taigi_handle_Backspace(ctx);
+        if (taigi_buffer_Len(ctx) == 0 && !zuin_str[0])
             return IRV_CLEAN;
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_ESCAPE)) {
-        chewing_handle_Esc(ctx);
+        taigi_handle_Esc(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_DELETE)) {
-        const char* zuin_str = chewing_bopomofo_String_static(ctx);
-        if (chewing_buffer_Len(ctx) == 0 && !zuin_str[0])
+        const char* zuin_str = taigi_bopomofo_String_static(ctx);
+        if (taigi_buffer_Len(ctx) == 0 && !zuin_str[0])
             return IRV_TO_PROCESS;
-        chewing_handle_Del(ctx);
-        if (chewing_buffer_Len(ctx) == 0 && !zuin_str[0])
+        taigi_handle_Del(ctx);
+        if (taigi_buffer_Len(ctx) == 0 && !zuin_str[0])
             return IRV_CLEAN;
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_CHEWING_UP)) {
-        chewing_handle_Up(ctx);
+        taigi_handle_Up(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_CHEWING_DOWN)) {
-        chewing_handle_Down(ctx);
+        taigi_handle_Down(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_CHEWING_PGUP)) {
-        chewing_handle_PageDown(ctx);
+        taigi_handle_PageDown(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_CHEWING_PGDN)) {
-        chewing_handle_PageUp(ctx);
+        taigi_handle_PageUp(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_RIGHT)) {
-        chewing_handle_Right(ctx);
+        taigi_handle_Right(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_LEFT)) {
-        chewing_handle_Left(ctx);
+        taigi_handle_Left(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_HOME)) {
-        chewing_handle_Home(ctx);
+        taigi_handle_Home(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_END)) {
-        chewing_handle_End(ctx);
+        taigi_handle_End(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_SHIFT_SPACE)) {
-        chewing_handle_ShiftSpace(ctx);
+        taigi_handle_ShiftSpace(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_CHEWING_SHIFT_LEFT)) {
-        chewing_handle_ShiftLeft(ctx);
+        taigi_handle_ShiftLeft(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_CHEWING_SHIFT_RIGHT)) {
-        chewing_handle_ShiftRight(ctx);
+        taigi_handle_ShiftRight(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_ENTER)) {
-        chewing_handle_Enter(ctx);
+        taigi_handle_Enter(ctx);
     } else if (state == FcitxKeyState_Ctrl && FcitxHotkeyIsHotKeyDigit(sym, FcitxKeyState_None)) {
-        chewing_handle_CtrlNum(ctx, sym);
+        taigi_handle_CtrlNum(ctx, sym);
     } else {
-        // to do: more chewing_handle
+        // to do: more taigi_handle
         return IRV_TO_PROCESS;
     }
 
-    if (chewing_keystroke_CheckAbsorb(ctx)) {
+    if (taigi_keystroke_CheckAbsorb(ctx)) {
         return IRV_DISPLAY_CANDWORDS;
-    } else if (chewing_keystroke_CheckIgnore(ctx)) {
+    } else if (taigi_keystroke_CheckIgnore(ctx)) {
         return IRV_TO_PROCESS;
-    } else if (chewing_commit_Check(ctx)) {
-        char* str = chewing_commit_String(ctx);
+    } else if (taigi_commit_Check(ctx)) {
+        char* str = taigi_commit_String(ctx);
         FcitxInputContext* ic = FcitxInstanceGetCurrentIC(chewing->owner);
         FcitxInstanceCommitString(chewing->owner, ic, str);
-        chewing_free(str);
+        taigi_free(str);
         return IRV_DISPLAY_CANDWORDS;
     } else {
         return IRV_DISPLAY_CANDWORDS;
@@ -266,23 +266,26 @@ boolean FcitxChewingInit(void* arg)
 void FcitxChewingReset(void* arg)
 {
     FcitxChewing* chewing = (FcitxChewing*) arg;
-    chewing_Reset(chewing->context);
+    taigi_Reset(chewing->context);
 
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
-    chewing_set_KBType( chewing->context, chewing_KBStr2Num(
+    taigi_set_KBType( chewing->context, taigi_KBStr2Num(
                 (char *) builtin_keymaps[chewing->config.layout]));
 
-    chewing_set_ChiEngMode(chewing->context, CHINESE_MODE);
+    taigi_set_ChiEngMode(chewing->context, CHINESE_MODE);
 #if 0
     FcitxUIStatus* puncStatus = FcitxUIGetStatusByName(chewing->owner, "punc");
     if (puncStatus) {
         if (puncStatus->getCurrentStatus(puncStatus->arg))
-            chewing_set_ShapeMode(chewing->context, FULLSHAPE_MODE);
+            taigi_set_ShapeMode(chewing->context, FULLSHAPE_MODE);
         else
-            chewing_set_ShapeMode(chewing->context, HALFSHAPE_MODE);
+            taigi_set_ShapeMode(chewing->context, HALFSHAPE_MODE);
     }
 #endif
 }
+
+
+
 
 static boolean FcitxChewingPaging(void* arg, boolean prev)
 {
@@ -296,12 +299,12 @@ static boolean FcitxChewingPaging(void* arg, boolean prev)
     }
 
     if (prev) {
-        chewing_handle_Left(chewing->context);
+        taigi_handle_Left(chewing->context);
     } else {
-        chewing_handle_Right(chewing->context);
+        taigi_handle_Right(chewing->context);
     }
 
-    if (chewing_keystroke_CheckAbsorb(chewing->context)) {
+    if (taigi_keystroke_CheckAbsorb(chewing->context)) {
         FcitxChewingGetCandWords(chewing);
         FcitxUIUpdateInputWindow(chewing->owner);
         return true;
@@ -341,27 +344,27 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
         selkey[i] = builtin_selectkeys[chewing->config.selkey][i];
     }
     
-    chewing_set_selKey(ctx, selkey, 10);
-    chewing_set_candPerPage(ctx, config->iMaxCandWord);
+    taigi_set_selKey(ctx, selkey, 10);
+    taigi_set_candPerPage(ctx, config->iMaxCandWord);
     FcitxCandidateWordSetPageSize(candList, config->iMaxCandWord);
     FcitxCandidateWordSetChoose(candList, builtin_selectkeys[chewing->config.selkey]);
 
     //clean up window asap
     FcitxInstanceCleanInputWindow(chewing->owner);
 
-    char * buf_str = chewing_buffer_String(ctx);
-    const char* zuin_str = chewing_bopomofo_String_static(ctx);
+    char * buf_str = taigi_buffer_String(ctx);
+    const char* zuin_str = taigi_bopomofo_String_static(ctx);
     ConfigChewing(chewing);
 
     FcitxLog(DEBUG, "%s %s", buf_str, zuin_str);
 
     int index = 0;
     /* if not check done, so there is candidate word */
-    if (!chewing_cand_CheckDone(ctx)) {
+    if (!taigi_cand_CheckDone(ctx)) {
         //get candidate word
-        chewing_cand_Enumerate(ctx);
-        while (chewing_cand_hasNext(ctx)) {
-            char* str = chewing_cand_String(ctx);
+        taigi_cand_Enumerate(ctx);
+        while (taigi_cand_hasNext(ctx)) {
+            char* str = taigi_cand_String(ctx);
             FcitxCandidateWord cw;
             ChewingCandWord* w = (ChewingCandWord*) fcitx_utils_malloc0(sizeof(ChewingCandWord));
             w->index = index;
@@ -372,15 +375,15 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
             cw.strWord = strdup(str);
             cw.wordType = MSG_OTHER;
             FcitxCandidateWordAppend(candList, &cw);
-            chewing_free(str);
+            taigi_free(str);
             index ++;
         }
 
         if (FcitxCandidateWordGetListSize(candList) > 0) {
             FcitxCandidateWordSetOverridePaging(
                 candList,
-                chewing_cand_CurrentPage(ctx) > 0,
-                chewing_cand_CurrentPage(ctx) + 1 < chewing_cand_TotalPage(ctx),
+                taigi_cand_CurrentPage(ctx) > 0,
+                taigi_cand_CurrentPage(ctx) + 1 < taigi_cand_TotalPage(ctx),
                 FcitxChewingPaging,
                 chewing,
                 NULL);
@@ -394,7 +397,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
 
         // setup cursor
         FcitxInputStateSetShowCursor(input, true);
-        int cur = chewing_cursor_Current(ctx);
+        int cur = taigi_cursor_Current(ctx);
         FcitxLog(DEBUG, "cur: %d", cur);
         int rcur = FcitxChewingGetRawCursorPos(buf_str, cur);
         FcitxInputStateSetCursorPos(input, rcur);
@@ -415,7 +418,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
         free(half2);
     } while(0);
 
-    chewing_free(buf_str);
+    taigi_free(buf_str);
 
     return IRV_DISPLAY_CANDWORDS;
 }
@@ -426,35 +429,35 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWord(void* arg, FcitxCandidateWord* candWo
     ChewingCandWord* w = (ChewingCandWord*) candWord->priv;
     FcitxGlobalConfig* config = FcitxInstanceGetGlobalConfig(chewing->owner);
     FcitxInputState *input = FcitxInstanceGetInputState(chewing->owner);
-    int page = w->index / config->iMaxCandWord + chewing_cand_CurrentPage(chewing->context);
+    int page = w->index / config->iMaxCandWord + taigi_cand_CurrentPage(chewing->context);
     int off = w->index % config->iMaxCandWord;
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
-    if (page < 0 || page >= chewing_cand_TotalPage(chewing->context))
+    if (page < 0 || page >= taigi_cand_TotalPage(chewing->context))
         return IRV_TO_PROCESS;
-    int lastPage = chewing_cand_CurrentPage(chewing->context);
-    while (page != chewing_cand_CurrentPage(chewing->context)) {
-        if (page < chewing_cand_CurrentPage(chewing->context)) {
-            chewing_handle_Left(chewing->context);
+    int lastPage = taigi_cand_CurrentPage(chewing->context);
+    while (page != taigi_cand_CurrentPage(chewing->context)) {
+        if (page < taigi_cand_CurrentPage(chewing->context)) {
+            taigi_handle_Left(chewing->context);
         }
-        if (page > chewing_cand_CurrentPage(chewing->context)) {
-            chewing_handle_Right(chewing->context);
+        if (page > taigi_cand_CurrentPage(chewing->context)) {
+            taigi_handle_Right(chewing->context);
         }
         /* though useless, but take care if there is a bug cause freeze */
-        if (lastPage == chewing_cand_CurrentPage(chewing->context)) {
+        if (lastPage == taigi_cand_CurrentPage(chewing->context)) {
             break;
         }
-        lastPage = chewing_cand_CurrentPage(chewing->context);
+        lastPage = taigi_cand_CurrentPage(chewing->context);
     }
-    chewing_handle_Default( chewing->context, builtin_selectkeys[chewing->config.selkey][off] );
+    taigi_handle_Default( chewing->context, builtin_selectkeys[chewing->config.selkey][off] );
     
-    if (chewing_keystroke_CheckAbsorb(chewing->context)) {
+    if (taigi_keystroke_CheckAbsorb(chewing->context)) {
         return IRV_DISPLAY_CANDWORDS;
-    } else if (chewing_keystroke_CheckIgnore(chewing->context)) {
+    } else if (taigi_keystroke_CheckIgnore(chewing->context)) {
         return IRV_TO_PROCESS;
-    } else if (chewing_commit_Check(chewing->context)) {
-        char* str = chewing_commit_String(chewing->context);
+    } else if (taigi_commit_Check(chewing->context)) {
+        char* str = taigi_commit_String(chewing->context);
         strcpy(FcitxInputStateGetOutputString(input), str);
-        chewing_free(str);
+        taigi_free(str);
         return IRV_COMMIT_STRING;
     } else
         return IRV_DISPLAY_CANDWORDS;
@@ -485,7 +488,7 @@ void FcitxChewingDestroy(void* arg)
 {
     FcitxChewing* chewing = (FcitxChewing*) arg;
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
-    chewing_delete(chewing->context);
+    taigi_delete(chewing->context);
     free(arg);
 }
 
@@ -501,15 +504,15 @@ void FcitxChewingOnClose(void* arg, FcitxIMCloseEventType event)
     ChewingContext* ctx = chewing->context;
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (event == CET_LostFocus || event == CET_ChangeByInactivate) {
-        chewing_handle_Enter(ctx);
+        taigi_handle_Enter(ctx);
         if (event == CET_ChangeByInactivate) {
-            if (chewing_commit_Check(ctx)) {
-                char* str = chewing_commit_String(ctx);
+            if (taigi_commit_Check(ctx)) {
+                char* str = taigi_commit_String(ctx);
                 FcitxInputContext* ic = FcitxInstanceGetCurrentIC(chewing->owner);
                 FcitxInstanceCommitString(chewing->owner, ic, str);
-                chewing_free(str);
+                taigi_free(str);
             } else {
-                char * buf_str = chewing_buffer_String(ctx);
+                char * buf_str = taigi_buffer_String(ctx);
                 do {
                     /* there is nothing */
                     if (strlen(buf_str) == 0)
@@ -517,7 +520,7 @@ void FcitxChewingOnClose(void* arg, FcitxIMCloseEventType event)
                     FcitxInputContext* ic = FcitxInstanceGetCurrentIC(chewing->owner);
                     FcitxInstanceCommitString(chewing->owner, ic, buf_str);
                 } while(0);
-                chewing_free(buf_str);
+                taigi_free(buf_str);
             }
         }
         else {
@@ -582,9 +585,9 @@ void ConfigChewing(FcitxChewing* chewing)
 {
     ChewingContext* ctx = chewing->context;
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
-    chewing_set_addPhraseDirection( ctx, chewing->config.bAddPhraseForward ? 0 : 1 );
-    chewing_set_phraseChoiceRearward( ctx, chewing->config.bChoiceBackward ? 1 : 0 );
-    chewing_set_autoShiftCur( ctx, chewing->config.bAutoShiftCursor ? 1 : 0 );
-    chewing_set_spaceAsSelection( ctx, chewing->config.bSpaceAsSelection ? 1 : 0 );
-    chewing_set_escCleanAllBuf( ctx, 1 );
+    taigi_set_addPhraseDirection( ctx, chewing->config.bAddPhraseForward ? 0 : 1 );
+    taigi_set_phraseChoiceRearward( ctx, chewing->config.bChoiceBackward ? 1 : 0 );
+    taigi_set_autoShiftCur( ctx, chewing->config.bAutoShiftCursor ? 1 : 0 );
+    taigi_set_spaceAsSelection( ctx, chewing->config.bSpaceAsSelection ? 1 : 0 );
+    taigi_set_escCleanAllBuf( ctx, 1 );
 }
