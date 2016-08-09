@@ -35,10 +35,10 @@
 #include <fcitx/ui.h>
 #include <libintl.h>
 
-#include <chewing.h>
+#include <taigi.h>
 
 #include "config.h"
-#include "chewing.h"
+#include "eim.h"
 
 CONFIG_DESC_DEFINE(GetFcitxChewingConfigDesc, "fcitx-chewing.desc")
 static int FcitxChewingGetRawCursorPos(char * str, int upos);
