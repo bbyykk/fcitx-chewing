@@ -54,7 +54,7 @@ typedef struct _ChewingCandWord {
     int index;
 } ChewingCandWord;
 
-FCITX_DEFINE_PLUGIN(fcitx_chewing, ime2, FcitxIMClass2) = {
+FCITX_DEFINE_PLUGIN(fcitx_taigi, ime2, FcitxIMClass2) = {
     FcitxChewingCreate,
     FcitxChewingDestroy,
     NULL,
@@ -109,28 +109,28 @@ void* FcitxChewingCreate(FcitxInstance* instance)
         return NULL;
     
     char* user_path = NULL;
-    FILE* fp = FcitxXDGGetFileUserWithPrefix("chewing", ".place_holder", "w", NULL);
+    FILE* fp = FcitxXDGGetFileUserWithPrefix("taigi", ".place_holder", "w", NULL);
     if (fp)
         fclose(fp);
-    FcitxXDGGetFileUserWithPrefix("chewing", "", NULL, &user_path);
-    FcitxLog(INFO, "Chewing storage path %s", user_path);
+    FcitxXDGGetFileUserWithPrefix("taigi", "", NULL, &user_path);
+    FcitxLog(INFO, "Taigi storage path %s", user_path);
     
     FcitxChewing* chewing = (FcitxChewing*) fcitx_utils_malloc0(sizeof(FcitxChewing));
     FcitxGlobalConfig* config = FcitxInstanceGetGlobalConfig(instance);
     FcitxInputState *input = FcitxInstanceGetInputState(instance);
     
-    bindtextdomain("fcitx-chewing", LOCALEDIR);
-    bind_textdomain_codeset("fcitx-chewing", "UTF-8");
+    bindtextdomain("fcitx-taigi", LOCALEDIR);
+    bind_textdomain_codeset("fcitx-taigi", "UTF-8");
 
     chewing->context = taigi_new();
     ChewingContext * ctx = chewing->context;
     
     if (NULL == chewing->context) {
-        FcitxLog(DEBUG, "chewing init failed");
+        FcitxLog(DEBUG, "taigi init failed");
         free(chewing);
         return NULL;
     } else {
-        FcitxLog(DEBUG, "chewing init ok");
+        FcitxLog(DEBUG, "taigi init ok");
     }
     {
 	    void *p = NULL;
@@ -159,9 +159,9 @@ void* FcitxChewingCreate(FcitxInstance* instance)
     FcitxInstanceRegisterIMv2(
         instance,
         chewing,
-        "chewing",
-        _("Chewing"),
-        "chewing",
+        "taigi",
+        _("Taigi"),
+        "taigi",
         iface,
         1,
         "zh_TW"
@@ -555,7 +555,7 @@ boolean LoadChewingConfig(FcitxChewingConfig* fs)
     if (!configDesc)
         return false;
 
-    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-chewing.config", "r", NULL);
+    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-taigi.config", "r", NULL);
 
     if (!fp) {
         if (errno == ENOENT)
@@ -574,7 +574,7 @@ boolean LoadChewingConfig(FcitxChewingConfig* fs)
 void SaveChewingConfig(FcitxChewingConfig* fc)
 {
     FcitxConfigFileDesc *configDesc = GetFcitxChewingConfigDesc();
-    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-chewing.config", "w", NULL);
+    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-taigi.config", "w", NULL);
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     FcitxConfigSaveConfigFileFp(fp, &fc->config, configDesc);
     if (fp)
