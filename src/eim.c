@@ -356,7 +356,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
     const char* zuin_str = taigi_bopomofo_String_static(ctx);
     ConfigChewing(chewing);
 
-    FcitxLog(DEBUG, "%s %s", buf_str, zuin_str);
+    FcitxLog(DEBUG, "(%s)(%s)", buf_str, zuin_str);
 
     int index = 0;
     /* if not check done, so there is candidate word */
@@ -398,15 +398,19 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
         // setup cursor
         FcitxInputStateSetShowCursor(input, true);
         int cur = taigi_cursor_Current(ctx);
-        FcitxLog(DEBUG, "cur: %d", cur);
-        int rcur = FcitxChewingGetRawCursorPos(buf_str, cur);
+        int rcur = taigi_cursor_Raw(ctx);
+        FcitxLog(DEBUG, "cur: %d, rcur: %d", cur, rcur);
         FcitxInputStateSetCursorPos(input, rcur);
         FcitxInputStateSetClientCursorPos(input, rcur);
 
         // insert zuin in the middle
         char * half1 = strndup(buf_str, rcur);
         char * half2 = strdup(buf_str + rcur);
-
+	
+	if(half1)
+		FcitxLog(DEBUG, "half1: %s", half1);
+	if(half2)
+		FcitxLog(DEBUG, "half2: %s", half2);
         FcitxMessagesAddMessageAtLast(msgPreedit, MSG_INPUT, "%s", half1);
         FcitxMessagesAddMessageAtLast(msgPreedit, MSG_CODE, "%s", zuin_str);
         FcitxMessagesAddMessageAtLast(msgPreedit, MSG_INPUT, "%s", half2);
@@ -472,10 +476,10 @@ static int FcitxChewingGetRawCursorPos(char * str, int upos)
 {
     unsigned int i;
     int pos = 0;
-    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     for (i = 0; i < upos; i++) {
         pos += fcitx_utf8_char_len(fcitx_utf8_get_nth_char(str, i));
     }
+    FcitxLog(INFO, "%s, upos=%d, pos=%d\n", __func__, upos, pos);
     return pos;
 }
 
