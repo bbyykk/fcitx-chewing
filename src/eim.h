@@ -32,8 +32,8 @@
 #define __EXPORT_API
 #endif
 
-#define _(x) dgettext("fcitx-chewing", x)
-#define CHEWING_MAX_LEN 16
+#define _(x) dgettext("fcitx-taigi", x)
+#define CHEWING_MAX_LEN 32
 
 __EXPORT_API void* FcitxChewingCreate(FcitxInstance* instance);
 __EXPORT_API void FcitxChewingDestroy(void* arg);
