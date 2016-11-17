@@ -24,7 +24,7 @@
 #include <fcitx/ime.h>
 #include <fcitx/instance.h>
 #include <fcitx/candidate.h>
-#include <chewing.h>
+#include <taigi.h>
 
 #ifdef __cplusplus
 #define __EXPORT_API extern "C"
