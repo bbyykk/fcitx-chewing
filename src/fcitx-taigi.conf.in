@@ -6,6 +6,6 @@ Category=InputMethod
 Enabled=True
 Library=fcitx-taigi.so
 CandidateWordNumber=9
-CandidateLayout=Horizontal
+CandidateLayout=Vertical
 Type=SharedLibrary
 IMRegisterMethod=ConfigFile

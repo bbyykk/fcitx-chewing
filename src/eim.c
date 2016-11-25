@@ -85,6 +85,11 @@ const char *builtin_keymaps[] = {
     "KB_HANYU_PINYIN"
 };
 
+#ifdef FcitxLog
+//#undef FcitxLog
+//#define FcitxLog(e, fmt...)
+#endif
+
 void logger(void *data, int level, const char *fmt, ...)
 {
 	va_list ap;
