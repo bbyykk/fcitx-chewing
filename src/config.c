@@ -22,10 +22,10 @@
 
 /* USE fcitx provided macro to bind config and variable */
 CONFIG_BINDING_BEGIN(FcitxChewingConfig)
-CONFIG_BINDING_REGISTER("Chewing", "SelectionKey", selkey)
-CONFIG_BINDING_REGISTER("Chewing", "AddPhraseForward", bAddPhraseForward)
-CONFIG_BINDING_REGISTER("Chewing", "ChoiceBackward", bChoiceBackward)
-CONFIG_BINDING_REGISTER("Chewing", "AutoShiftCursor", bAutoShiftCursor)
-CONFIG_BINDING_REGISTER("Chewing", "SpaceAsSelection", bSpaceAsSelection)
-CONFIG_BINDING_REGISTER("Chewing", "Layout", layout)
+CONFIG_BINDING_REGISTER("Taigi", "SelectionKey", selkey)
+CONFIG_BINDING_REGISTER("Taigi", "AddPhraseForward", bAddPhraseForward)
+CONFIG_BINDING_REGISTER("Taigi", "ChoiceBackward", bChoiceBackward)
+CONFIG_BINDING_REGISTER("Taigi", "AutoShiftCursor", bAutoShiftCursor)
+CONFIG_BINDING_REGISTER("Taigi", "SpaceAsSelection", bSpaceAsSelection)
+CONFIG_BINDING_REGISTER("Taigi", "Layout", layout)
 CONFIG_BINDING_END()

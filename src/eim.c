@@ -344,7 +344,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
 
     int selkey[10];
     int i = 0;
-    FcitxLog(INFO, "%s, %d", __func__, __LINE__);
+    FcitxLog(INFO, "XXXXX %s, %d", __func__, __LINE__);
     for (i = 0; i < 10; i++) {
         selkey[i] = builtin_selectkeys[chewing->config.selkey][i];
     }
@@ -361,7 +361,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
     const char* zuin_str = taigi_bopomofo_String_static(ctx);
     ConfigChewing(chewing);
 
-    FcitxLog(DEBUG, "(%s)(%s)", buf_str, zuin_str);
+    FcitxLog(INFO, "(%s)(%s)", buf_str, zuin_str);
 
     int index = 0;
     /* if not check done, so there is candidate word */
@@ -413,9 +413,9 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
         char * half2 = strdup(buf_str + rcur);
 	
 	if(half1)
-		FcitxLog(DEBUG, "half1: %s", half1);
+		FcitxLog(INFO, "half1: %s", half1);
 	if(half2)
-		FcitxLog(DEBUG, "half2: %s", half2);
+		FcitxLog(INFO, "half2: %s", half2);
         FcitxMessagesAddMessageAtLast(msgPreedit, MSG_INPUT, "%s", half1);
         FcitxMessagesAddMessageAtLast(msgPreedit, MSG_CODE, "%s", zuin_str);
         FcitxMessagesAddMessageAtLast(msgPreedit, MSG_INPUT, "%s", half2);
@@ -429,6 +429,7 @@ INPUT_RETURN_VALUE FcitxChewingGetCandWords(void* arg)
 
     taigi_free(buf_str);
 
+    FcitxLog(DEBUG, "^^^ END ^^^");
     return IRV_DISPLAY_CANDWORDS;
 }
 
@@ -563,7 +564,6 @@ boolean LoadChewingConfig(FcitxChewingConfig* fs)
     FcitxLog(INFO, "%s, %d", __func__, __LINE__);
     if (!configDesc)
         return false;
-
     FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-taigi.config", "r", NULL);
 
     if (!fp) {
