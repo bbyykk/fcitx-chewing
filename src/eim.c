@@ -193,6 +193,10 @@ INPUT_RETURN_VALUE FcitxChewingDoInput(void* arg, FcitxKeySym sym, unsigned int 
         taigi_handle_Space(ctx);
     } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_TAB)) {
         taigi_handle_Tab(ctx);
+    } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_COMMA)) {
+        taigi_handle_Left(ctx);
+    } else if (FcitxHotkeyIsHotKey(sym, state, FCITX_PERIOD)) {
+        taigi_handle_Right(ctx);
     } else if (FcitxHotkeyIsHotKeySimple(sym, state)) {
         int scan_code = (int) sym & 0xff;
         taigi_handle_Default(ctx, scan_code);
