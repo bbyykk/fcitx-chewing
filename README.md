@@ -1,7 +1,10 @@
 fcitx-taigi
 
 ## Prerequisite
-Please installl the libtaigi first
+
+Please installl the libtaigi first!
+Install the following package:
+
 	# sudo apt-get install fcitx-libs-dev
 
 ## Build
